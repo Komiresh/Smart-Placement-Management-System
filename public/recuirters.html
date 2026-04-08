@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Suite | SmartPlacement</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --teal: #0ea5e9;
+            --indigo: #4f46e5;
+            --dark: #0f172a;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --ink: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.10), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 28%),
+                var(--bg);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: var(--indigo); border-radius: 999px; }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        .topbar {
+            background: #ffffff;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .grid-shell { position: relative; overflow: hidden; }
+        .grid-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(79, 70, 229, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 70, 229, 0.07) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent 85%);
+            pointer-events: none;
+        }
+
+        .input-shell {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(248, 250, 252, 0.95);
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-shell:focus {
+            border-color: rgba(79, 70, 229, 0.45);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
+            background: #ffffff;
+        }
+
+        .menu-panel { transform: translateX(-102%); transition: transform 0.28s ease; }
+        .menu-panel.open { transform: translateX(0); }
+        .menu-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.28s ease; }
+        .menu-backdrop.open { opacity: 1; pointer-events: auto; }
+        .drawer-open { overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute left-[-10rem] top-8 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl"></div>
+        <div class="absolute right-[-8rem] top-40 h-80 w-80 rounded-full bg-sky-400/15 blur-3xl"></div>
+        <div class="absolute bottom-[-8rem] left-1/3 h-80 w-80 rounded-full bg-cyan-300/10 blur-3xl"></div>
+    </div>
+
+    <button id="menu-backdrop" class="menu-backdrop fixed inset-0 z-40 bg-slate-950/45" aria-label="Close navigation"></button>
+
+    <aside id="menu-panel" class="menu-panel fixed inset-y-0 left-0 z-50 flex w-[320px] max-w-[88vw] flex-col border-r border-slate-800 bg-slate-950 text-slate-100">
+        <div class="border-b border-white/10 p-6">
+            <div class="flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-400">
+                    <i data-lucide="briefcase-business" class="h-6 w-6"></i>
+                </div>
+                <div>
+                    <p class="text-xs uppercase tracking-[0.28em] text-slate-400">Recruiter Suite</p>
+                    <h1 class="text-xl font-bold text-white">SmartPlacement</h1>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-1 space-y-2 p-4">
+            <button class="menu-link flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-left text-white" data-target="job-posting"><i data-lucide="square-pen" class="h-5 w-5"></i><span class="font-medium">Post Jobs</span></button>
+            <button class="menu-link flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-slate-300 hover:bg-white/5" data-target="job-studio"><i data-lucide="layout-template" class="h-5 w-5"></i><span class="font-medium">Job Posting Studio</span></button>
+            <button class="menu-link flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-slate-300 hover:bg-white/5" data-target="assessments"><i data-lucide="calendar-range" class="h-5 w-5"></i><span class="font-medium">Assessments & Interviews</span></button>
+            <button class="menu-link flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-slate-300 hover:bg-white/5" data-target="pipeline"><i data-lucide="users-round" class="h-5 w-5"></i><span class="font-medium">Recruitment Pipeline</span></button>
+            <button class="menu-link flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-slate-300 hover:bg-white/5" data-target="applicants-list"><i data-lucide="users" class="h-5 w-5"></i><span class="font-medium">All Applicants</span></button>
+            <button class="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-red-300 hover:bg-red-500/10 mt-4" onclick="signOut(event)"><i data-lucide="log-out" class="h-5 w-5"></i><span class="font-medium">Sign Out</span></button>
+        </nav>
+        <div class="p-4 pt-0">
+            <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
+                <p class="font-semibold text-white">Placement Office Support</p>
+                <p class="mt-3">support@smartplacement.edu</p>
+                <p class="mt-2">Mon - Sat, 9:00 AM to 6:00 PM</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="min-h-screen">
+        <header class="topbar sticky top-0 z-30">
+            <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 md:px-6 xl:flex-row xl:items-center">
+                    <div class="flex items-center gap-3 xl:w-[340px]">
+                        <button id="menu-toggle" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" aria-expanded="false" aria-controls="menu-panel">
+                            <i data-lucide="menu" class="h-5 w-5"></i>
+                        </button>
+                        <div class="flex min-w-0 flex-1 items-center gap-3 rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-sky-500 font-bold text-white" id="recruiter-initials">TA</div>
+                            <div class="min-w-0">
+                                <p id="recruiter-name-display" class="truncate text-base font-bold">Talent Team</p>
+                                <p id="recruiter-company-display" class="truncate text-sm text-slate-500">ApexNova Technologies</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="flex min-w-0 flex-1 items-center gap-3 rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-4">
+                        <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
+                        <input id="global-search" type="text" placeholder="Search roles, candidates, interviews or locations" class="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400">
+                    </label>
+
+                    <div class="rounded-[24px] border border-slate-200 bg-white px-5 py-4 xl:w-[280px]">
+                        <div class="relative">
+                            <p class="text-xs uppercase tracking-[0.28em] text-indigo-600">Recruiter Suite</p>
+                            <p class="mt-2 text-2xl font-black tracking-tight text-slate-900">SmartPlacement</p>
+                        </div>
+                    </div>
+                </div>
+        </header>
+
+        <main class="mx-auto max-w-7xl px-4 pb-10 pt-6 md:px-8 md:pt-8">
+            <section id="job-posting" class="scroll-mt-32 grid gap-6 xl:grid-cols-[1.18fr_0.82fr]">
+                <div class="panel rounded-[32px] p-6 md:p-8">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                        <div>
+                            <p class="text-sm font-bold uppercase tracking-[0.24em] text-indigo-600">Job Posting Workspace</p>
+                            <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-950">Create a new hiring campaign</h2>
+                            <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">Post a role, set the hiring track, and push it directly into your recruiter studio without the old dashboard clutter.</p>
+                        </div>
+                        <div class="rounded-3xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-700">
+                            <p class="font-semibold">Campus hiring window</p>
+                            <p class="mt-1 text-indigo-600">Spring drive currently active</p>
+                        </div>
+                    </div>
+
+                    <form id="job-form" class="mt-8 space-y-5">
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div><label for="job-title" class="mb-2 block text-sm font-semibold text-slate-700">Role Title</label><input id="job-title" class="input-shell" type="text" placeholder="Graduate Software Engineer"></div>
+                            <div><label for="job-track" class="mb-2 block text-sm font-semibold text-slate-700">Hiring Track</label><input id="job-track" class="input-shell" type="text" placeholder="Engineering"></div>
+                            <div><label for="job-location" class="mb-2 block text-sm font-semibold text-slate-700">Location</label><input id="job-location" class="input-shell" type="text" placeholder="Bangalore"></div>
+                            <div><label for="job-package" class="mb-2 block text-sm font-semibold text-slate-700">Compensation</label><input id="job-package" class="input-shell" type="text" placeholder="12 LPA"></div>
+                            <div><label for="job-type" class="mb-2 block text-sm font-semibold text-slate-700">Role Type</label><select id="job-type" class="input-shell"><option value="Full Time">Full Time</option><option value="Internship + PPO">Internship + PPO</option><option value="Contract">Contract</option></select></div>
+                            <div><label for="job-deadline" class="mb-2 block text-sm font-semibold text-slate-700">Apply Before</label><input id="job-deadline" class="input-shell" type="date"></div>
+                            <div><label for="job-mode" class="mb-2 block text-sm font-semibold text-slate-700">Work Mode</label><select id="job-mode" class="input-shell"><option value="Hybrid">Hybrid</option><option value="On Site">On Site</option><option value="Remote">Remote</option></select></div>
+                            <div><label for="job-openings" class="mb-2 block text-sm font-semibold text-slate-700">Open Positions</label><input id="job-openings" class="input-shell" type="number" min="1" value="6"></div>
+                        </div>
+                        <div><label for="job-skills" class="mb-2 block text-sm font-semibold text-slate-700">Core Skills</label><input id="job-skills" class="input-shell" type="text" placeholder="Java, DSA, APIs, SQL"></div>
+                        <div><label for="job-summary" class="mb-2 block text-sm font-semibold text-slate-700">Role Summary</label><textarea id="job-summary" rows="4" class="input-shell resize-none" placeholder="Add a short overview for students, screening team, and interview panel."></textarea></div>
+                        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <p id="form-status" class="text-sm text-slate-500">Publish a role or save it as draft. New roles will appear in the studio below.</p>
+                            <div class="flex flex-wrap gap-3">
+                                <button type="button" id="save-draft" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-700 hover:bg-slate-50">Save Draft</button>
+                                <button type="submit" class="rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-500 px-5 py-3 font-semibold text-white shadow-lg shadow-indigo-500/20 hover:-translate-y-0.5">Post Job</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+                        <div class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Live Roles</p><p id="live-role-count" class="mt-3 text-4xl font-black tracking-tight text-slate-950">0</p><p class="mt-2 text-sm text-emerald-600">Roles actively visible to students</p></div>
+                        <div class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Scheduled Rounds</p><p id="scheduled-round-count" class="mt-3 text-4xl font-black tracking-tight text-slate-950">0</p><p class="mt-2 text-sm text-sky-600">Tests and interviews ready this week</p></div>
+                        <div class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Offer Ready</p><p id="offer-ready-count" class="mt-3 text-4xl font-black tracking-tight text-slate-950">0</p><p class="mt-2 text-sm text-amber-600">Candidates in final approval stage</p></div>
+                    </div>
+
+                    <div class="grid-shell relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-6 text-white">
+                        <div class="relative">
+                            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.22em] text-slate-200">
+                                <i data-lucide="clipboard-check" class="h-4 w-4 text-cyan-300"></i>
+                                Publishing Checklist
+                            </div>
+                            <div class="mt-6 space-y-4">
+                                <div class="rounded-3xl border border-white/10 bg-white/10 p-4"><p class="font-semibold">Role details and compensation locked</p><p class="mt-1 text-sm text-slate-300">Keep package, location, and openings aligned with the offer plan.</p></div>
+                                <div class="rounded-3xl border border-white/10 bg-white/10 p-4"><p class="font-semibold">Assessment format confirmed</p><p class="mt-1 text-sm text-slate-300">Add test mode and interview rounds before going live.</p></div>
+                                <div class="rounded-3xl border border-white/10 bg-white/10 p-4"><p class="font-semibold">Panel response time tracked</p><p class="mt-1 text-sm text-slate-300">Recruitment pipeline moves faster when interview owners are assigned early.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mt-6 grid gap-6 xl:grid-cols-[1fr_1fr]">
+                <div id="job-studio" class="panel scroll-mt-32 rounded-[32px] p-6 md:p-7">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="text-sm font-bold uppercase tracking-[0.24em] text-indigo-600">Job Posting Studio</p>
+                            <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950">Manage every role with cleaner status control</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="job-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white" data-status="All">All</button>
+                            <button class="job-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-status="Live">Live</button>
+                            <button class="job-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-status="Draft">Draft</button>
+                            <button class="job-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-status="Closed">Closed</button>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid gap-4 md:grid-cols-3">
+                        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Live</p><p id="job-count-live" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Draft</p><p id="job-count-draft" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                        <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Closed</p><p id="job-count-closed" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                    </div>
+                    <div id="jobs-container" class="mt-6 space-y-4"></div>
+                </div>
+
+                <div id="assessments" class="panel scroll-mt-32 rounded-[32px] p-6 md:p-7">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="text-sm font-bold uppercase tracking-[0.24em] text-indigo-600">Assessments & Interviews</p>
+                            <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950">Sharper scheduling for test and panel coordination</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="event-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white" data-type="All">All</button>
+                            <button class="event-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-type="Test">Tests</button>
+                            <button class="event-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-type="Interview">Interviews</button>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid gap-4 md:grid-cols-3">
+                        <div class="rounded-3xl border border-sky-100 bg-sky-50 p-4"><p class="text-sm text-sky-700">This Week</p><p id="event-week-count" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                        <div class="rounded-3xl border border-amber-100 bg-amber-50 p-4"><p class="text-sm text-amber-700">Pending Confirmations</p><p id="event-pending-count" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                        <div class="rounded-3xl border border-emerald-100 bg-emerald-50 p-4"><p class="text-sm text-emerald-700">Panels Locked</p><p id="event-locked-count" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                    </div>
+                    <div id="events-container" class="mt-6 space-y-4"></div>
+                </div>
+            </section>
+
+            <section id="pipeline" class="panel scroll-mt-32 mt-6 rounded-[32px] p-6 md:p-7">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="text-sm font-bold uppercase tracking-[0.24em] text-indigo-600">Recruitment Pipeline</p>
+                        <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950">Track every stage with a clearer candidate flow</h3>
+                    </div>
+                    <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50">Export Hiring Snapshot</button>
+                </div>
+                <div class="mt-6 grid gap-4 md:grid-cols-4">
+                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Applicants</p><p id="pipeline-applicants" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Shortlisted</p><p id="pipeline-shortlisted" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Interviewing</p><p id="pipeline-interviewing" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4"><p class="text-sm text-slate-500">Offers</p><p id="pipeline-offers" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+                </div>
+                <div id="pipeline-board" class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5"></div>
+            </section>
+
+            <section id="applicants-list" class="panel scroll-mt-32 mt-6 rounded-[32px] p-6 md:p-7">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="text-sm font-bold uppercase tracking-[0.24em] text-indigo-600">All Applicants</p>
+                        <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950">Review and filter your talent pool</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="applicant-status-filter" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700 outline-none">
+                            <option value="All">All Statuses</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Shortlisted">Shortlisted</option>
+                            <option value="Test Cleared">Test Cleared</option>
+                            <option value="Interviewing">Interviewing</option>
+                            <option value="Offers">Offers</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs uppercase text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold">Candidate</th>
+                                    <th class="px-6 py-4 font-semibold">Applied Role</th>
+                                    <th class="px-6 py-4 font-semibold">Status</th>
+                                    <th class="px-6 py-4 font-semibold">Assessment Score</th>
+                                    <th class="px-6 py-4 font-semibold">Applied On</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicants-table-body" class="divide-y divide-slate-100">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="api_util.js"></script>
+    <script>
+        let jobs = [];
+        let allApplications = [];
+
+        const events = [
+            { title: 'Online Aptitude Assessment', type: 'Test', job: 'Graduate Software Engineer', date: 'Apr 03, 2026', time: '10:00 AM - 11:30 AM', mode: 'Remote Proctored', status: 'Confirmed', owner: 'Assessment Ops', note: '142 students mapped with auto attendance.' },
+            { title: 'Technical Interview Panel 1', type: 'Interview', job: 'Graduate Software Engineer', date: 'Apr 05, 2026', time: '11:00 AM - 4:00 PM', mode: 'Campus Placement Cell', status: 'Panel Locked', owner: 'Engineering Panel', note: '6 interviewers assigned with room-wise schedule.' },
+            { title: 'HR Fitment Round', type: 'Interview', job: 'Cloud Support Associate', date: 'Apr 06, 2026', time: '2:00 PM - 5:00 PM', mode: 'Virtual Meeting', status: 'Awaiting Candidate Confirmation', owner: 'Talent Acquisition', note: 'Candidate confirmation closes by 10 AM.' },
+            { title: 'SQL Screening Test', type: 'Test', job: 'Data Analyst Trainee', date: 'Apr 09, 2026', time: '9:30 AM - 10:30 AM', mode: 'Lab - Block B', status: 'Drafted', owner: 'Analytics Hiring Team', note: 'Lab capacity and invigilator sheet still open.' }
+        ];
+
+        let pipeline = [
+            { stage: 'Applied', count: 0, theme: 'slate', candidates: [] },
+            { stage: 'Shortlisted', count: 0, theme: 'indigo', candidates: [] },
+            { stage: 'Test Cleared', count: 0, theme: 'sky', candidates: [] },
+            { stage: 'Interviewing', count: 0, theme: 'amber', candidates: [] },
+            { stage: 'Offers', count: 0, theme: 'emerald', candidates: [] }
+        ];
+
+        const jobsContainer = document.getElementById('jobs-container');
+        const eventsContainer = document.getElementById('events-container');
+        const pipelineBoard = document.getElementById('pipeline-board');
+        const applicantsTableBody = document.getElementById('applicants-table-body');
+        const applicantStatusFilterEl = document.getElementById('applicant-status-filter');
+        const searchInput = document.getElementById('global-search');
+        const formStatus = document.getElementById('form-status');
+        const form = document.getElementById('job-form');
+        const draftButton = document.getElementById('save-draft');
+        const menuPanel = document.getElementById('menu-panel');
+        const menuBackdrop = document.getElementById('menu-backdrop');
+        const menuToggle = document.getElementById('menu-toggle');
+
+        let activeJobFilter = 'All';
+        let activeEventFilter = 'All';
+        let activeApplicantStatusFilter = 'All';
+        let searchTerm = '';
+
+        function createIcons() { lucide.createIcons(); }
+
+        function toggleMenu(forceOpen) {
+            const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !menuPanel.classList.contains('open');
+            menuPanel.classList.toggle('open', shouldOpen);
+            menuBackdrop.classList.toggle('open', shouldOpen);
+            document.body.classList.toggle('drawer-open', shouldOpen);
+            menuToggle.setAttribute('aria-expanded', String(shouldOpen));
+        }
+
+        function matchesSearch(values) {
+            if (!searchTerm) return true;
+            return values.some((value) => String(value).toLowerCase().includes(searchTerm));
+        }
+
+        function formatDate(input) {
+            if (!input) return 'TBD';
+            const date = new Date(input);
+            if (Number.isNaN(date.getTime())) return input;
+            return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+        }
+
+        function statusBadge(status) {
+            if (status === 'Live') return 'border-emerald-100 bg-emerald-50 text-emerald-700';
+            if (status === 'Draft') return 'border-amber-100 bg-amber-50 text-amber-700';
+            return 'border-slate-200 bg-slate-100 text-slate-600';
+        }
+
+        function eventBadge(type) {
+            return type === 'Test' ? 'border-amber-100 bg-amber-50 text-amber-700' : 'border-sky-100 bg-sky-50 text-sky-700';
+        }
+
+        function pipelineTheme(theme) {
+            const themes = { slate: 'border-slate-200 bg-slate-50', indigo: 'border-indigo-100 bg-indigo-50', sky: 'border-sky-100 bg-sky-50', amber: 'border-amber-100 bg-amber-50', emerald: 'border-emerald-100 bg-emerald-50' };
+            return themes[theme] || 'border-slate-200 bg-slate-50';
+        }
+
+        function filteredJobs() {
+            return jobs.filter((job) => (activeJobFilter === 'All' || job.status === activeJobFilter) && matchesSearch([job.role, job.track, job.location, job.package, job.type, job.mode, job.skills.join(' ')]));
+        }
+
+        function filteredEvents() {
+            return events.filter((event) => (activeEventFilter === 'All' || event.type === activeEventFilter) && matchesSearch([event.title, event.job, event.mode, event.owner, event.status, event.note]));
+        }
+
+        function filteredPipeline() {
+            return pipeline.map((column) => ({ ...column, candidates: column.candidates.filter((candidate) => matchesSearch([column.stage, candidate.name, candidate.detail, candidate.score])) }));
+        }
+
+        function updateSummaryCards() {
+            const liveRoles = jobs.filter((job) => job.status === 'Live').length;
+            const draftRoles = jobs.filter((job) => job.status === 'Draft').length;
+            const closedRoles = jobs.filter((job) => job.status === 'Closed').length;
+            const applicants = pipeline.find((stage) => stage.stage === 'Applied')?.count || 0;
+            const shortlisted = pipeline.find((stage) => stage.stage === 'Shortlisted')?.count || 0;
+            const interviewing = pipeline.find((stage) => stage.stage === 'Interviewing')?.count || 0;
+            const offers = pipeline.find((stage) => stage.stage === 'Offers')?.count || 0;
+
+            document.getElementById('live-role-count').textContent = liveRoles;
+            document.getElementById('scheduled-round-count').textContent = events.length;
+            document.getElementById('offer-ready-count').textContent = offers;
+            document.getElementById('job-count-live').textContent = liveRoles;
+            document.getElementById('job-count-draft').textContent = draftRoles;
+            document.getElementById('job-count-closed').textContent = closedRoles;
+            document.getElementById('event-week-count').textContent = events.length;
+            document.getElementById('event-pending-count').textContent = events.filter((event) => event.status.includes('Awaiting') || event.status.includes('Draft')).length;
+            document.getElementById('event-locked-count').textContent = events.filter((event) => event.status.includes('Locked') || event.status.includes('Confirmed')).length;
+            document.getElementById('pipeline-applicants').textContent = applicants;
+            document.getElementById('pipeline-shortlisted').textContent = shortlisted;
+            document.getElementById('pipeline-interviewing').textContent = interviewing;
+            document.getElementById('pipeline-offers').textContent = offers;
+        }
+
+        function renderJobs() {
+            const roles = filteredJobs();
+            if (!roles.length) {
+                jobsContainer.innerHTML = '<div class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center text-slate-500">No jobs match the current filter or search.</div>';
+                createIcons();
+                return;
+            }
+
+            jobsContainer.innerHTML = roles.map((job) => `
+                <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm hover:shadow-lg hover:shadow-slate-900/5">
+                    <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="rounded-full border px-3 py-1 text-xs font-bold ${statusBadge(job.status)}">${job.status}</span>
+                                <span class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">${job.track}</span>
+                                <span class="text-xs text-slate-400">${job.company}</span>
+                            </div>
+                            <div><h4 class="text-xl font-black tracking-tight text-slate-950">${job.title}</h4><p class="mt-1 text-sm text-slate-500">${job.type} | ${job.mode} | ${job.location}</p></div>
+                            <div class="flex flex-wrap gap-2">${(job.skills ? job.skills.split(',') : []).map((skill) => `<span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">${skill}</span>`).join('')}</div>
+                            <div class="grid gap-3 text-sm text-slate-600 md:grid-cols-4">
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Package</p><p class="mt-2 font-semibold text-slate-900">${job.package}</p></div>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Applicants</p><p class="mt-2 font-semibold text-slate-900">${job.applicants || 0}</p></div>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Openings</p><p class="mt-2 font-semibold text-slate-900">${job.openings}</p></div>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Deadline</p><p class="mt-2 font-semibold text-slate-900">${new Date(job.deadline).toLocaleDateString()}</p></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 lg:w-[180px] lg:flex-col">
+                            <button class="rounded-2xl bg-slate-950 px-4 py-3 font-semibold text-white hover:bg-slate-800">Manage Role</button>
+                            <button class="rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 hover:bg-slate-50">View Applicants</button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+            createIcons();
+        }
+
+        function renderEvents() {
+            const items = filteredEvents();
+            if (!items.length) {
+                eventsContainer.innerHTML = '<div class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center text-slate-500">No assessments or interviews match the current filter or search.</div>';
+                createIcons();
+                return;
+            }
+
+            eventsContainer.innerHTML = items.map((event) => `
+                <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm hover:shadow-lg hover:shadow-slate-900/5">
+                    <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="rounded-full border px-3 py-1 text-xs font-bold ${eventBadge(event.type)}">${event.type}</span>
+                                <span class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">${event.job}</span>
+                            </div>
+                            <div><h4 class="text-xl font-black tracking-tight text-slate-950">${event.title}</h4><p class="mt-1 text-sm text-slate-500">${event.date} | ${event.time}</p></div>
+                            <div class="grid gap-3 md:grid-cols-3">
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-600"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Mode</p><p class="mt-2 font-semibold text-slate-900">${event.mode}</p></div>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-600"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Owner</p><p class="mt-2 font-semibold text-slate-900">${event.owner}</p></div>
+                                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-600"><p class="text-xs uppercase tracking-[0.16em] text-slate-400">Status</p><p class="mt-2 font-semibold text-slate-900">${event.status}</p></div>
+                            </div>
+                            <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-600">${event.note}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 lg:w-[190px] lg:flex-col">
+                            <button class="rounded-2xl bg-slate-950 px-4 py-3 font-semibold text-white hover:bg-slate-800">Reschedule</button>
+                            <button class="rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 hover:bg-slate-50">View Panel</button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+            createIcons();
+        }
+
+        function renderPipeline() {
+            const columns = filteredPipeline();
+            pipelineBoard.innerHTML = columns.map((column) => `
+                <div class="rounded-[28px] border p-4 ${pipelineTheme(column.theme)}">
+                    <div class="flex items-center justify-between gap-3">
+                        <div><h4 class="text-lg font-black tracking-tight text-slate-950">${column.stage}</h4><p class="text-sm text-slate-500">${column.count} candidates in stage</p></div>
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/70 bg-white font-bold text-slate-900">${column.count}</span>
+                    </div>
+                    <div class="mt-4 space-y-3">
+                        ${column.candidates.length ? column.candidates.map((candidate) => `
+                            <div class="rounded-2xl border border-white/80 bg-white px-3 py-3 shadow-sm">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div><p class="font-semibold text-slate-900">${candidate.name}</p><p class="mt-1 text-xs text-slate-500">${candidate.detail}</p></div>
+                                    <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600">${candidate.score}</span>
+                                </div>
+                            </div>
+                        `).join('') : '<div class="rounded-2xl border border-dashed border-slate-300 bg-white/80 px-4 py-6 text-center text-sm text-slate-500">No matching candidates for the current search.</div>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderApplicants() {
+            if (!applicantsTableBody) return;
+            let filtered = allApplications.filter(app => {
+                const matchesStatus = (activeApplicantStatusFilter === 'All' || app.status === activeApplicantStatusFilter);
+                const matchesSearchText = matchesSearch([app.Student?.fullName, app.Student?.email, app.Job?.title, app.status]);
+                return matchesStatus && matchesSearchText;
+            });
+
+            if (!filtered.length) {
+                applicantsTableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">No applicants found matching the filters.</td></tr>';
+                return;
+            }
+
+            applicantsTableBody.innerHTML = filtered.map(app => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <p class="font-bold text-slate-900">${app.Student?.fullName || 'Unknown'}</p>
+                        <p class="mt-0.5 text-xs text-slate-500">${app.Student?.email || ''}</p>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-slate-700">${app.Job?.title || 'Unknown Role'}</td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700">
+                            ${app.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-medium text-slate-700">${app.score || '--'}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
+                        ${formatDate(app.createdAt)}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function rerenderAll() {
+            if (typeof updateSummaryCards === 'function') updateSummaryCards();
+            renderJobs();
+            renderEvents();
+            renderPipeline();
+            renderApplicants();
+        }
+
+        function buildJobFromForm(status) {
+            const title = document.getElementById('job-title').value.trim();
+            const track = document.getElementById('job-track').value.trim();
+            const location = document.getElementById('job-location').value.trim();
+            const packageValue = document.getElementById('job-package').value.trim();
+            const type = document.getElementById('job-type').value;
+            const deadline = formatDate(document.getElementById('job-deadline').value);
+            const mode = document.getElementById('job-mode').value;
+            const openings = Number(document.getElementById('job-openings').value) || 1;
+            const skills = document.getElementById('job-skills').value.split(',').map((skill) => skill.trim()).filter(Boolean);
+
+            if (!title || !track || !location || !packageValue) {
+                formStatus.textContent = 'Add role title, hiring track, location, and compensation before continuing.';
+                formStatus.className = 'text-sm text-rose-600';
+                return null;
+            }
+
+            return { company: JSON.parse(localStorage.getItem('user'))?.fullName || 'Company', title: title, track, type, mode, location, package: packageValue, summary: document.getElementById('job-summary').value, openings, deadline: document.getElementById('job-deadline').value, status, skills: skills.join(',') };
+        }
+
+        async function submitJob(status) {
+            const newJob = buildJobFromForm(status);
+            if (!newJob) return;
+
+            try {
+                const res = await apiFetch('/recruiter/jobs', {
+                    method: 'POST',
+                    body: JSON.stringify(newJob)
+                });
+                if(!res.ok) {
+                    const data = await res.json();
+                    alert(data.error);
+                    return;
+                }
+                const createdJob = await res.json();
+                jobs.unshift(createdJob);
+                activeJobFilter = 'All';
+                form.reset();
+                document.getElementById('job-openings').value = 6;
+                document.getElementById('job-mode').value = 'Hybrid';
+                document.getElementById('job-type').value = 'Full Time';
+                formStatus.textContent = status === 'Live' ? 'Role posted successfully. It now appears in Job Posting Studio.' : 'Draft saved successfully. You can polish it before publishing.';
+                formStatus.className = 'text-sm text-emerald-600';
+
+                document.querySelectorAll('.job-filter').forEach((button) => {
+                    button.className = 'job-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600';
+                });
+                document.querySelector('.job-filter[data-status="All"]').className = 'job-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white';
+                rerenderAll();
+            } catch(e) { console.error(e); }
+        }
+
+        async function loadData() {
+            try {
+                // Determine logged-in recruiter details
+                const userObj = JSON.parse(localStorage.getItem('user') || '{}');
+                const recruiterName = userObj.fullName || 'Talent Team';
+                const recruiterCompany = userObj.company || 'Company Name';
+                
+                document.getElementById('recruiter-name-display').textContent = recruiterName;
+                document.getElementById('recruiter-company-display').textContent = recruiterCompany;
+                document.getElementById('recruiter-initials').textContent = (recruiterCompany.substring(0, 2) || 'TA').toUpperCase();
+
+                const [jobsRes, pipeRes] = await Promise.all([
+                    apiFetch('/recruiter/jobs'),
+                    apiFetch('/recruiter/pipeline')
+                ]);
+                jobs = await jobsRes.json();
+                const apps = await pipeRes.json();
+                allApplications = apps;
+                
+                pipeline.forEach(p => { p.candidates = []; p.count = 0; });
+                apps.forEach(app => {
+                    const mappedStage = app.status; // Currently 'Applied'
+                    const stageObj = pipeline.find(p => p.stage === mappedStage) || pipeline[0];
+                    stageObj.candidates.push({
+                         name: app.Student.fullName,
+                         detail: app.Job.title,
+                         score: app.score
+                    });
+                    stageObj.count++;
+                });
+
+                rerenderAll();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+
+        menuToggle.addEventListener('click', () => toggleMenu());
+        menuBackdrop.addEventListener('click', () => toggleMenu(false));
+
+        document.querySelectorAll('.menu-link').forEach((button) => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.menu-link').forEach((item) => {
+                    item.className = 'menu-link flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-slate-300 hover:bg-white/5';
+                });
+                button.className = 'menu-link flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-left text-white';
+                const target = document.getElementById(button.dataset.target);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                toggleMenu(false);
+            });
+        });
+
+        document.querySelectorAll('.job-filter').forEach((button) => {
+            button.addEventListener('click', () => {
+                activeJobFilter = button.dataset.status;
+                document.querySelectorAll('.job-filter').forEach((item) => {
+                    item.className = 'job-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600';
+                });
+                button.className = 'job-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white';
+                renderJobs();
+            });
+        });
+
+        document.querySelectorAll('.event-filter').forEach((button) => {
+            button.addEventListener('click', () => {
+                activeEventFilter = button.dataset.type;
+                document.querySelectorAll('.event-filter').forEach((item) => {
+                    item.className = 'event-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600';
+                });
+                button.className = 'event-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white';
+                renderEvents();
+            });
+        });
+
+        if (applicantStatusFilterEl) {
+            applicantStatusFilterEl.addEventListener('change', (e) => {
+                activeApplicantStatusFilter = e.target.value;
+                renderApplicants();
+            });
+        }
+
+        searchInput.addEventListener('input', (event) => {
+            searchTerm = event.target.value.trim().toLowerCase();
+            renderJobs();
+            renderEvents();
+            renderPipeline();
+            renderApplicants();
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            submitJob('Live');
+        });
+
+        draftButton.addEventListener('click', () => submitJob('Draft'));
+
+        function signOut(e) {
+            if(e) e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'index1.html';
+        }
+
+        createIcons();
+        loadData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | SmartPlacement</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fbff;
+      --ink: #0f172a;
+      --border: #e2e8f0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(14,165,233,.14), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(79,70,229,.16), transparent 26%),
+        var(--bg);
+      color: var(--ink);
+    }
+    body.menu-open { overflow: hidden; }
+    .drawer { transform: translateX(-102%); transition: transform .28s ease; }
+    .drawer.open { transform: translateX(0); }
+    .backdrop { opacity: 0; pointer-events: none; transition: opacity .28s ease; }
+    .backdrop.open { opacity: 1; pointer-events: auto; }
+    .panel {
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.7);
+      box-shadow: 0 24px 70px rgba(15,23,42,.10);
+      backdrop-filter: blur(18px);
+    }
+  </style>
+</head>
+<body>
+  <button id="menu-backdrop" class="backdrop fixed inset-0 z-40 bg-slate-950/45" aria-label="Close menu"></button>
+
+  <aside id="admin-drawer" class="drawer fixed inset-y-0 left-0 z-50 w-[320px] max-w-[88vw] overflow-y-auto rounded-r-[28px] border-r border-white/10 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white shadow-2xl shadow-slate-950/35">
+    <div class="border-b border-white/10 p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500">
+            <i data-lucide="shield-check" class="h-6 w-6"></i>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-[0.26em] text-sky-200/80">Admin Portal</p>
+            <h1 class="text-xl font-bold">SmartPlacement</h1>
+          </div>
+        </div>
+        <button id="menu-close" class="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10">
+          <i data-lucide="x" class="h-5 w-5"></i>
+        </button>
+      </div>
+
+      <div class="mt-6 rounded-[26px] border border-white/10 bg-white/10 p-4">
+        <p class="text-xs uppercase tracking-[0.22em] text-slate-300">Placement Officer</p>
+        <h2 class="mt-3 text-lg font-bold">Dr. Meera Nair</h2>
+        <p class="mt-1 text-sm leading-6 text-slate-300">Approve registrations, issue approval IDs, manage company records, and coordinate placement operations.</p>
+      </div>
+    </div>
+
+    <nav class="space-y-2 p-4">
+      <a class="nav-link flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white" href="#overview"><i data-lucide="layout-dashboard" class="h-5 w-5"></i><span class="font-semibold">Overview</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5" href="#approvals"><i data-lucide="badge-check" class="h-5 w-5"></i><span class="font-semibold">Approvals Desk</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5" href="#analytics"><i data-lucide="chart-column" class="h-5 w-5"></i><span class="font-semibold">Placement Analytics</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5" href="#registry"><i data-lucide="id-card" class="h-5 w-5"></i><span class="font-semibold">Approval Registry</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5" href="#companies"><i data-lucide="building-2" class="h-5 w-5"></i><span class="font-semibold">Company Operations</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5" href="#contact"><i data-lucide="mail" class="h-5 w-5"></i><span class="font-semibold">Contact Desk</span></a>
+      <a class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-red-300 hover:bg-red-500/20 mt-4" href="#" onclick="signOut(event)"><i data-lucide="log-out" class="h-5 w-5"></i><span class="font-semibold">Sign Out</span></a>
+    </nav>
+
+    <div class="p-4 pt-0">
+      <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 text-sm leading-6 text-slate-300">
+        <p class="text-xs uppercase tracking-[0.22em] text-sky-200">Today's Focus</p>
+        <p class="mt-3">Clear all valid company registrations, generate approval IDs, and move approved employers into active placement coordination.</p>
+      </div>
+    </div>
+  </aside>
+
+  <div class="mx-auto max-w-[1440px] px-4 pb-10 md:px-6">
+    <header class="panel sticky top-0 z-30 mx-[-1rem] px-4 py-4 shadow-[0_24px_44px_rgba(15,23,42,0.14),0_8px_18px_rgba(15,23,42,0.08)] md:mx-[-1.5rem] md:px-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          <button id="menu-toggle" class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+            <i data-lucide="menu" class="h-5 w-5"></i>
+          </button>
+          <div class="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-sky-500 text-sm font-bold text-white">PO</div>
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-indigo-600">Placement Officer</p>
+              <p class="font-bold text-slate-900">Admin Control Center</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-1 flex-wrap items-center justify-end gap-3">
+          <label class="flex min-w-[280px] flex-1 items-center gap-3 rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-3 md:max-w-[420px] md:flex-none">
+            <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
+            <input id="global-search" type="text" placeholder="Search companies, IDs, channels or status" class="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400">
+          </label>
+          <div class="rounded-[20px] border border-slate-200 bg-white px-4 py-3">
+            <p class="text-xs uppercase tracking-[0.2em] text-indigo-600">SmartPlacement</p>
+            <p class="font-bold text-slate-900">Admin Portal Workspace</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="space-y-6 pt-6">
+      <section id="overview" class="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-6 text-white shadow-2xl shadow-slate-950/18 md:p-8">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,.18),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(99,102,241,.24),transparent_30%)]"></div>
+        <div class="relative grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-sky-100">
+              <i data-lucide="sparkles" class="h-4 w-4"></i>
+              Placement Officer Workflow
+            </div>
+            <h2 class="mt-5 max-w-[14ch] text-4xl font-black leading-none tracking-tight md:text-5xl">Approve companies and manage the full employer intake cycle.</h2>
+            <p class="mt-5 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">Review portal registrations, validate mail requests, track total company registrations, issue approval IDs, monitor placement analytics, and keep recruiter coordination moving from one professional admin portal.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="rounded-2xl bg-white px-5 py-3 font-bold text-slate-950">Approve Pending Queue</button>
+              <button class="rounded-2xl border border-white/12 bg-white/10 px-5 py-3 font-bold text-white">Open Mail Requests</button>
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <div class="rounded-[26px] border border-white/10 bg-white/10 p-5"><p class="text-sm text-slate-300">Pending Approvals</p><h3 id="hero-pending" class="mt-3 text-4xl font-black">0</h3><p class="mt-2 text-sm text-sky-100">Companies waiting for verification</p></div>
+            <div class="rounded-[26px] border border-white/10 bg-white/10 p-5"><p class="text-sm text-slate-300">Approval IDs Issued</p><h3 id="hero-ids" class="mt-3 text-4xl font-black">0</h3><p class="mt-2 text-sm text-sky-100">Verified employers with official IDs</p></div>
+            <div class="rounded-[26px] border border-white/10 bg-white/10 p-5"><p class="text-sm text-slate-300">Registered Companies</p><h3 id="hero-companies" class="mt-3 text-4xl font-black">0</h3><p class="mt-2 text-sm text-sky-100">Total employers in the portal</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Total Companies Registered</p><h3 id="stat-registered" class="mt-3 text-4xl font-black tracking-tight">0</h3><p class="mt-2 text-sm text-slate-500">Portal and mail intake combined</p></article>
+        <article class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Approved Companies</p><h3 id="stat-approved" class="mt-3 text-4xl font-black tracking-tight">0</h3><p class="mt-2 text-sm text-slate-500">Ready for placement operations</p></article>
+        <article class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Requests in Review</p><h3 id="stat-pending" class="mt-3 text-4xl font-black tracking-tight">0</h3><p class="mt-2 text-sm text-slate-500">Awaiting admin decision or clarification</p></article>
+        <article class="panel rounded-[28px] p-5"><p class="text-sm text-slate-500">Placement Rate</p><h3 class="mt-3 text-4xl font-black tracking-tight">84%</h3><p class="mt-2 text-sm text-slate-500">Current placement conversion this cycle</p></article>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[1.14fr_0.86fr]">
+        <div id="approvals" class="panel rounded-[32px] p-6">
+          <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Approvals Desk</p><h3 class="mt-2 text-2xl font-black tracking-tight">Company approval management</h3></div>
+            <div class="flex flex-wrap gap-2">
+              <button class="company-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white" data-filter="All">All</button>
+              <button class="company-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-filter="Pending">Pending</button>
+              <button class="company-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-filter="Approved">Approved</button>
+              <button class="company-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600" data-filter="Hold">Hold</button>
+            </div>
+          </div>
+          <div id="company-list" class="space-y-4"></div>
+        </div>
+
+        <div class="panel rounded-[32px] p-6">
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Request Inbox</p><h3 class="mt-2 text-2xl font-black tracking-tight">Portal and mail requests</h3></div>
+            <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700">Open Inbox</button>
+          </div>
+          <div id="request-list" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-2">
+        <div id="analytics" class="panel rounded-[32px] p-6">
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Placement Analytics</p><h3 class="mt-2 text-2xl font-black tracking-tight">Approval health and outcomes</h3></div>
+            <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700">View Full Analytics</button>
+          </div>
+          <div class="space-y-4">
+            <div class="rounded-[24px] border border-slate-200 bg-white p-5"><h4 class="font-bold">Approval Turnaround</h4><div class="mt-4 space-y-3"><div><div class="mb-2 flex items-center justify-between text-sm"><span>Within 24 hours</span><strong>72%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[72%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div><div><div class="mb-2 flex items-center justify-between text-sm"><span>Within 48 hours</span><strong>21%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[21%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div><div><div class="mb-2 flex items-center justify-between text-sm"><span>Clarification needed</span><strong>7%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[7%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div></div></div>
+            <div class="rounded-[24px] border border-slate-200 bg-white p-5"><h4 class="font-bold">Placement Stream Performance</h4><div class="mt-4 space-y-3"><div><div class="mb-2 flex items-center justify-between text-sm"><span>Engineering</span><strong>91%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[91%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div><div><div class="mb-2 flex items-center justify-between text-sm"><span>Analytics</span><strong>83%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[83%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div><div><div class="mb-2 flex items-center justify-between text-sm"><span>Core & Operations</span><strong>76%</strong></div><div class="h-2.5 rounded-full bg-slate-200"><div class="h-full w-[76%] rounded-full bg-gradient-to-r from-indigo-600 to-sky-500"></div></div></div></div></div>
+          </div>
+        </div>
+
+        <div id="registry" class="panel rounded-[32px] p-6">
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Approval Registry</p><h3 class="mt-2 text-2xl font-black tracking-tight">Issued approval IDs</h3></div>
+            <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700">Download Registry</button>
+          </div>
+          <div id="id-list" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <section id="companies" class="panel rounded-[32px] p-6">
+        <div class="mb-5 flex items-center justify-between gap-4">
+          <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Company Operations</p><h3 class="mt-2 text-2xl font-black tracking-tight">Managed companies and admin actions</h3></div>
+          <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700">Open Registry</button>
+        </div>
+        <div id="activity-list" class="space-y-4"></div>
+      </section>
+
+      <section id="contact" class="panel rounded-[32px] p-6">
+        <div class="mb-5 flex items-center justify-between gap-4">
+          <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Contact Desk</p><h3 class="mt-2 text-2xl font-black tracking-tight">Placement communication and coordination</h3></div>
+          <button class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700">Send Update</button>
+        </div>
+        <div class="grid gap-4 xl:grid-cols-3">
+          <article class="rounded-[24px] border border-slate-200 bg-white p-5"><h4 class="font-bold">Placement Office Coordination</h4><p class="mt-3 text-sm leading-7 text-slate-500">Route all approved employers to placement operations with company details, drive timelines, and recruiter contact points.</p></article>
+          <article class="rounded-[24px] border border-slate-200 bg-white p-5"><h4 class="font-bold">Recruiter Communication Status</h4><p class="mt-3 text-sm leading-7 text-slate-500">7 companies await next-step mailers, 3 need document clarification, and 5 approved partners are ready for recruiter activation.</p></article>
+          <article class="rounded-[24px] border border-slate-200 bg-white p-5"><h4 class="font-bold">Admin Responsibility Coverage</h4><p class="mt-3 text-sm leading-7 text-slate-500">Approve registrations, review mail requests, issue approval IDs, manage companies, track analytics, and coordinate placement communication.</p></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="api_util.js"></script>
+  <script>
+    let companies = [];
+    let requests = [];
+    let registry = [];
+    let activity = [];
+
+    const companyList=document.getElementById("company-list"),requestList=document.getElementById("request-list"),idList=document.getElementById("id-list"),activityList=document.getElementById("activity-list"),searchInput=document.getElementById("global-search"),drawer=document.getElementById("admin-drawer"),menuToggle=document.getElementById("menu-toggle"),menuClose=document.getElementById("menu-close"),menuBackdrop=document.getElementById("menu-backdrop");
+    let activeFilter="All",searchTerm="";
+    const badgeClass=(s)=>s==="Approved"||s==="Live"?"bg-emerald-50 text-emerald-700":s==="Pending"||s==="Pending Approval"||s==="Review Docs"?"bg-amber-50 text-amber-700":s==="Hold"||s==="Awaiting Clarification"?"bg-rose-50 text-rose-700":"bg-sky-50 text-sky-700";
+    const match=(values)=>!searchTerm||values.some(v=>String(v).toLowerCase().includes(searchTerm));
+    
+    function toggleMenu(force){const open=typeof force==="boolean"?force:!drawer.classList.contains("open");drawer.classList.toggle("open",open);menuBackdrop.classList.toggle("open",open);document.body.classList.toggle("menu-open",open);menuToggle.setAttribute("aria-expanded",String(open));}
+    function updateStats(){const approved=companies.filter(c=>c.status==="Approved").length,pending=companies.filter(c=>c.status==="Pending").length;document.getElementById("hero-pending").textContent=pending;document.getElementById("hero-ids").textContent=registry.length;document.getElementById("hero-companies").textContent=companies.length;document.getElementById("stat-registered").textContent=companies.length;document.getElementById("stat-approved").textContent=approved;document.getElementById("stat-pending").textContent=pending;}
+    function renderCompanies(){const filtered=companies.filter(c=>(activeFilter==="All"||c.status===activeFilter)&&match([c.company,c.industry,"Portal Registration",c.email,"Verified",c.approvalId||""]));companyList.innerHTML=filtered.length?filtered.map((c,i)=>`<article class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm"><div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between"><div class="space-y-4"><div class="flex flex-wrap items-center gap-2"><span class="rounded-full px-3 py-1 text-xs font-bold ${badgeClass(c.status)}">${c.status}</span><span class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Portal Registration</span></div><div><h4 class="text-xl font-black tracking-tight">${c.company || c.fullName}</h4><p class="mt-2 text-sm leading-6 text-slate-500">${c.industry || 'Tech'}<br>${c.email}</p></div><div class="grid gap-3 md:grid-cols-5">${[{l:"Documents",v:"Verified"},{l:"Requested On",v:new Date(c.createdAt).toLocaleDateString()},{l:"Open Roles",v:c.jobsCount || 0},{l:"Approval ID",v:c.approvalId||"Pending"},{l:"Status",v:c.status}].map(b=>`<div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">${b.l}</p><p class="mt-2 text-sm font-semibold text-slate-900">${b.v}</p></div>`).join("")}</div></div><div class="flex flex-wrap gap-2 lg:w-[190px] lg:flex-col"><button class="approve-company rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 px-4 py-3 font-semibold text-white" data-id="${c.id}">Approve Company</button><button class="rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700">Review Profile</button><button class="hold-company rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 font-semibold text-amber-700" data-id="${c.id}">Put on Hold</button></div></div></article>`).join(""):`<div class="rounded-[24px] border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">No companies match the current filter or search.</div>`;}
+    function renderRequests(){requestList.innerHTML='';}
+    function renderRegistry(){const filtered=companies.filter(c=>c.approvalId && match([c.company,c.approvalId,"Portal Registration"]));idList.innerHTML=filtered.map(r=>`<article class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm"><div class="flex items-start justify-between gap-4"><div><h4 class="text-lg font-black tracking-tight">${r.company || r.fullName}</h4><p class="mt-2 text-sm text-slate-500">Portal Registration</p></div><span class="rounded-full bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700">${r.approvalId}</span></div><div class="mt-4 grid gap-3 md:grid-cols-2"><div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Issued On</p><p class="mt-2 text-sm font-semibold">${new Date(r.updatedAt).toLocaleDateString()}</p></div><div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3"><p class="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Approved By</p><p class="mt-2 text-sm font-semibold">Dr. Meera Nair</p></div></div></article>`).join("");}
+    function renderActivity(){activityList.innerHTML='';}
+    function rerender(){updateStats();renderCompanies();renderRequests();renderRegistry();renderActivity();lucide.createIcons();}
+    
+    document.querySelectorAll(".company-filter").forEach(btn=>btn.addEventListener("click",()=>{activeFilter=btn.dataset.filter;document.querySelectorAll(".company-filter").forEach(i=>i.className="company-filter rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600");btn.className="company-filter rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white";renderCompanies();}));
+    searchInput.addEventListener("input",e=>{searchTerm=e.target.value.trim().toLowerCase();renderCompanies();renderRequests();renderRegistry();});
+    menuToggle.addEventListener("click",()=>toggleMenu());menuClose.addEventListener("click",()=>toggleMenu(false));menuBackdrop.addEventListener("click",()=>toggleMenu(false));
+    document.querySelectorAll(".nav-link").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll(".nav-link").forEach(i=>i.className="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-slate-200 hover:bg-white/5");link.className="nav-link flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-white";toggleMenu(false);}));
+    
+    document.addEventListener("click", async e=>{
+      const a=e.target.closest(".approve-company"),h=e.target.closest(".hold-company");
+      if(a){
+        const id=a.dataset.id;
+        await apiFetch(`/admin/recruiters/${id}/status`, { method: 'POST', body: JSON.stringify({status: 'Approved'}) });
+        await loadData();
+      }
+      if(h){
+        const id=h.dataset.id;
+        await apiFetch(`/admin/recruiters/${id}/status`, { method: 'POST', body: JSON.stringify({status: 'Hold'}) });
+        await loadData();
+      }
+    });
+
+    async function loadData() {
+      try {
+        const [recRes, statsRes] = await Promise.all([
+          apiFetch('/admin/recruiters'),
+          apiFetch('/admin/stats')
+        ]);
+        companies = await recRes.json();
+        const stats = await statsRes.json();
+        registry = companies.filter(c => c.approvalId);
+        rerender();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadData();
+
+    function signOut(e) {
+      if(e) e.preventDefault();
+      localStorage.clear();
+      window.location.href = 'index1.html';
+    }
+  </script>
+</body>
+</html>

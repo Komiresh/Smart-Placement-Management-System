@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration | Smart Placement Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<style>
+:root {
+  --navy: #0f172a;
+  --teal: #0ea5e9;
+  --mint: #14b8a6;
+  --line: #dbe4f0;
+  --page: #f3f7fb;
+  --text: #0f172a;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --success: #059669;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, var(--page) 48%, #eef5fb 100%);
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--teal), var(--mint));
+  border-radius: 999px;
+}
+
+header {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a1040 48%, #0c2340 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity: 0.9;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -120px 0;
+  height: 260px;
+  background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.28) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.header-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px 26px;
+}
+
+.college-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 5px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #b9c7db;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.college-pill strong {
+  color: #8ee8ff;
+  font-weight: 800;
+}
+
+header h1 {
+  margin: 0;
+  font-family: "Sora", sans-serif;
+  font-size: clamp(18px, 3vw, 34px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+}
+
+header h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, #7dd3fc, #22d3ee 55%, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-sub {
+  margin: 10px 0 0;
+  color: #9fb1ca;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.nav-wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav a {
+  display: block;
+  padding: 18px 14px;
+  text-decoration: none;
+  color: #475569;
+  font-size: 13.5px;
+  font-weight: 700;
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 999px;
+  transform: scaleX(0);
+  transition: transform 0.22s ease;
+  background: linear-gradient(90deg, var(--teal), #6366f1);
+}
+
+nav li.active a,
+nav a:hover {
+  color: #0f172a;
+}
+
+nav li.active a::after,
+nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.register-section {
+  position: relative;
+  padding: 78px 20px 88px;
+}
+
+.register-section::before {
+  content: "";
+  position: absolute;
+  left: -120px;
+  top: 140px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.register-section::after {
+  content: "";
+  position: absolute;
+  right: -90px;
+  bottom: 40px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.11) 0%, transparent 72%);
+  pointer-events: none;
+}
+
+.page-shell {
+  max-width: 1220px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 42px;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.16);
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.section-header h2 {
+  margin: 16px 0 12px;
+  font-family: "Sora", sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.section-header p {
+  max-width: 720px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.register-grid {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+.form-panel {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 28px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+}
+
+.form-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  padding: 30px;
+}
+
+.section-card {
+  padding: 22px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(248, 251, 255, 0.95), #ffffff);
+}
+
+.section-card + .section-card {
+  margin-top: 18px;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.section-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #0f172a;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(20, 184, 166, 0.15));
+}
+
+.section-card-header h4 {
+  margin: 0 0 2px;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.section-card-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-group:last-child {
+  margin-bottom: 0;
+}
+
+.field-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.input-shell {
+  position: relative;
+}
+
+.input-shell .material-symbols-outlined {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--subtle);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-shell input,
+.input-shell select {
+  height: 54px;
+  padding: 0 16px 0 46px;
+  appearance: none;
+}
+
+.field-group textarea {
+  min-height: 118px;
+  padding: 14px 16px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.field-group input::placeholder,
+.field-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  outline: none;
+  border-color: rgba(14, 165, 233, 0.55);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  color: var(--subtle);
+  pointer-events: none;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.password-toggle:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
+}
+
+.helper-text {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.preference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice-chip {
+  position: relative;
+}
+
+.choice-chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-chip span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 14px;
+  border-radius: 15px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.choice-chip input:checked + span {
+  border-color: rgba(14, 165, 233, 0.3);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(99, 102, 241, 0.12));
+  color: #0f172a;
+  box-shadow: inset 0 0 0 1px rgba(14, 165, 233, 0.12);
+}
+
+.terms-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 22px 0 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.terms-row input {
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  accent-color: #0284c7;
+}
+
+.terms-row a,
+.signin-note a {
+  color: #0f766e;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.terms-row a:hover,
+.signin-note a:hover {
+  text-decoration: underline;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.security-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f0fdf9;
+  border: 1px solid #ccfbf1;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.primary-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 15px 28px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 42%, #6366f1 100%);
+  box-shadow: 0 16px 30px rgba(2, 132, 199, 0.24);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 32px rgba(2, 132, 199, 0.28);
+}
+
+.signin-note {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+footer {
+  position: relative;
+  overflow: hidden;
+  background: #091120;
+  color: #d7e2f0;
+}
+
+footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0ea5e9, #14b8a6, #6366f1);
+}
+
+.footer-wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 42px 20px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.9fr;
+  gap: 28px;
+  padding-bottom: 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-brand {
+  font-family: "Sora", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.footer-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #7dd3fc;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.footer-copy,
+.footer-links a,
+.footer-contact span,
+.footer-contact a {
+  color: #9eb0c8;
+  font-size: 13.5px;
+  line-height: 1.8;
+  text-decoration: none;
+}
+
+.footer-title {
+  margin-bottom: 12px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li + li {
+  margin-top: 8px;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover {
+  color: #ffffff;
+}
+
+.footer-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.footer-contact-row + .footer-contact-row {
+  margin-top: 12px;
+}
+
+.footer-contact-row .material-symbols-outlined {
+  color: #67e8f9;
+  font-size: 20px;
+}
+
+.footer-bottom {
+  padding-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: #91a4bc;
+  font-size: 12.5px;
+}
+
+.footer-bottom a {
+  color: #c5d3e5;
+  text-decoration: none;
+  margin-left: 14px;
+}
+
+.footer-bottom a:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 991px) {
+  nav ul {
+    flex-wrap: wrap;
+  }
+
+  .register-section {
+    padding: 64px 16px 76px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  header h1 {
+    white-space: normal;
+  }
+
+  .form-panel {
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+
+  .action-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .preference-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-card {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="college-pill">
+      <span class="material-symbols-outlined" style="font-size:14px;">school</span>
+      <strong>Training &amp; Placement Cell</strong>
+      <span>College Portal</span>
+    </div>
+    <h1><em>Smart Placement Management System</em></h1>
+    <p class="header-sub">Bridging talent with opportunity - one student at a time</p>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-wrap">
+    <ul>
+      <li><a href="index1.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li class="active"><a href="student_registration_page.html">Student Register</a></li>
+      <li><a href="#">Jobs Data</a></li>
+      <li><a href="#">Recruiters Login</a></li>
+      <li><a href="#">Admin Login</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="register-section">
+  <div class="page-shell">
+    <div class="section-header">
+      <span class="section-tag">
+        <span class="material-symbols-outlined" style="font-size:16px;">person_add</span>
+        New Student Onboarding
+      </span>
+      <h2>Build your placement-ready profile</h2>
+      <p>Create your student account to access placement drives, profile shortlisting, and centralized communication from the Training and Placement Cell.</p>
+    </div>
+
+    <div class="register-grid">
+      <div class="form-panel">
+        <form>
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-icon">
+                <span class="material-symbols-outlined">badge</span>
+              </div>
+              <div>
+                <h4>Identity Details</h4>
+                <p>Basic information used for verification and communication.</p>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="fullName">Full Name</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">person</span>
+                    <input id="fullName" type="text" placeholder="Enter your full name">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="registerNumber">Registration Number</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">fingerprint</span>
+                    <input id="registerNumber" type="text" placeholder="Enter registration number">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="email">Institute Email</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">alternate_email</span>
+                    <input id="email" type="email" placeholder="Enter college email">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="phone">Mobile Number</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">call</span>
+                    <input id="phone" type="tel" placeholder="Enter mobile number">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-icon">
+                <span class="material-symbols-outlined">school</span>
+              </div>
+              <div>
+                <h4>Academic Profile</h4>
+                <p>Add your department, batch, and career preference details.</p>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="department">Department</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">apartment</span>
+                    <select id="department">
+                      <option selected disabled>Select department</option>
+                      <option>Computer Science</option>
+                      <option>Information Technology</option>
+                      <option>Electronics and Communication</option>
+                      <option>Electrical Engineering</option>
+                      <option>Mechanical Engineering</option>
+                      <option>Civil Engineering</option>
+                    </select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="field-group">
+                  <label for="year">Passing Year</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <select id="year">
+                      <option selected disabled>Select year</option>
+                      <option>2026</option>
+                      <option>2027</option>
+                      <option>2028</option>
+                    </select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="field-group">
+                  <label for="cgpa">Current CGPA</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">query_stats</span>
+                    <input id="cgpa" type="text" placeholder="Eg. 8.42">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="skills">Primary Skill Area</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">terminal</span>
+                    <input id="skills" type="text" placeholder="Eg. Java, Web Development, Data Analytics">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="location">Preferred Job Location</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">location_on</span>
+                    <input id="location" type="text" placeholder="Enter preferred city or region">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group mt-1">
+              <label>Preferred Opportunity Type</label>
+              <div class="preference-grid">
+                <label class="choice-chip">
+                  <input type="radio" name="opportunity" checked>
+                  <span>Full-Time Placement</span>
+                </label>
+                <label class="choice-chip">
+                  <input type="radio" name="opportunity">
+                  <span>Internship</span>
+                </label>
+                <label class="choice-chip">
+                  <input type="radio" name="opportunity">
+                  <span>Internship + PPO</span>
+                </label>
+                <label class="choice-chip">
+                  <input type="radio" name="opportunity">
+                  <span>Open to All Roles</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="field-group mt-3">
+              <label for="about">Short Professional Summary</label>
+              <textarea id="about" placeholder="Write a short summary about your strengths, interests, and placement goals."></textarea>
+              <div class="helper-text">A concise summary helps recruiters and coordinators quickly understand your profile focus.</div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-icon">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <div>
+                <h4>Account Setup</h4>
+                <p>Create secure credentials for portal access.</p>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="password">Create Password</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">key</span>
+                    <input id="password" type="password" placeholder="Create password">
+                    <button class="password-toggle" type="button" data-target="password" aria-label="Show password">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="field-group">
+                  <label for="confirmPassword">Confirm Password</label>
+                  <div class="input-shell">
+                    <span class="material-symbols-outlined">password</span>
+                    <input id="confirmPassword" type="password" placeholder="Confirm password">
+                    <button class="password-toggle" type="button" data-target="confirmPassword" aria-label="Show password">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="helper-text">Use at least eight characters with a combination of letters, numbers, and symbols for stronger security.</div>
+
+            <label class="terms-row">
+              <input type="checkbox">
+              <span>I confirm that the information provided is accurate and I agree to the <a href="#">student registration policy</a> and <a href="#">placement cell guidelines</a>.</span>
+            </label>
+
+            <div class="action-row">
+              <div class="security-note">
+                <span class="material-symbols-outlined" style="font-size:16px;">verified</span>
+                Secure registration workflow
+              </div>
+              <button type="submit" class="primary-btn">Create Student Account</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="signin-note">
+          Already registered? <a href="login.html">Proceed to login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Smart Placement Management System</div>
+        <span class="footer-kicker">Training &amp; Placement Cell</span>
+        <p class="footer-copy">A centralized portal for student onboarding, job tracking, recruiter engagement, and placement communication across the institution.</p>
+      </div>
+
+      <div>
+        <div class="footer-title">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="index1.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="student_registration_page.html">Student Register</a></li>
+          <li><a href="#">Job Postings</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">Contact</div>
+        <div class="footer-contact">
+          <div class="footer-contact-row">
+            <span class="material-symbols-outlined">location_on</span>
+            <span>Training &amp; Placement Cell, Main Building, Campus Office</span>
+          </div>
+          <div class="footer-contact-row">
+            <span class="material-symbols-outlined">call</span>
+            <a href="tel:+914023456789">+91 40 2345 6789</a>
+          </div>
+          <div class="footer-contact-row">
+            <span class="material-symbols-outlined">mail</span>
+            <a href="mailto:placementcell@example.com">placementcell@example.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2025 Smart Placement Management System. All rights reserved.</div>
+      <div>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+document.querySelectorAll(".password-toggle").forEach((button) => {
+  button.addEventListener("click", () => {
+    const targetId = button.getAttribute("data-target");
+    const input = document.getElementById(targetId);
+
+    if (!input) {
+      return;
+    }
+
+    const showPassword = input.type === "password";
+    input.type = showPassword ? "text" : "password";
+    button.setAttribute("aria-label", showPassword ? "Hide password" : "Show password");
+    button.querySelector(".material-symbols-outlined").textContent = showPassword ? "visibility_off" : "visibility";
+  });
+});
+
+const regForm = document.querySelector('form');
+regForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fullName = document.getElementById('fullName').value;
+  const registerNumber = document.getElementById('registerNumber').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match"); return;
+  }
+  
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: 'student', fullName, email, password, registerNumber, phone })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || 'Registration failed');
+      return;
+    }
+    alert('Registration successful! Please login.');
+    window.location.href = 'login.html';
+  } catch (err) {
+    console.error(err);
+    alert('Error connecting to server');
+  }
+});
+</script>
+</body>
+</html>
